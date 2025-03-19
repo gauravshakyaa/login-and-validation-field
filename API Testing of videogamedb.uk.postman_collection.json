@@ -1,0 +1,858 @@
+{
+	"info": {
+		"_postman_id": "15838d25-8fd3-49df-81db-e523caa5be7f",
+		"name": "API Testing of videogamedb.uk",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25674824",
+		"_collection_link": "https://www.postman.com/winter-desert-163049/workspace/https-www-videogamedb-uk-swagger-ui/collection/25674824-15838d25-8fd3-49df-81db-e523caa5be7f?action=share&source=collection_link&creator=25674824"
+	},
+	"item": [
+		{
+			"name": "Requesting Authentication Token",
+			"item": [
+				{
+					"name": "Positive Cases",
+					"item": [
+						{
+							"name": "Valid username and password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"var response_JSON = pm.response.json()\r",
+											"pm.test(\"Verify status code is 200\", function () {\r",
+											"\tpm.expect(pm.response.code).to.eq(200)\r",
+											"});\r",
+											"pm.test(\"Validate token key is present\", function () {\r",
+											"\tpm.expect(response_JSON).to.be.an('object');\r",
+											"\tpm.expect(response_JSON.token).to.exist;\r",
+											"});\r",
+											"var token = response_JSON.token\r",
+											"pm.collectionVariables.set(\"token\", token)\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"admin\",\r\n  \"username\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Case-insensitive login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"admin\",\r\n  \"username\": \"ADMIN\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Invalid Cases",
+					"item": [
+						{
+							"name": "Invalid username and valid password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"admin\",\r\n  \"username\": \"invalid\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid password and valid username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 400\", function () {\r",
+											"\tpm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"invalid\",\r\n  \"username\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid password and invalid username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"invalid\",\r\n  \"username\": \"invalid\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Empty password and Empty username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"\",\r\n  \"username\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Username and password exceeding maximum length",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"admin\",\r\n  \"username\": \"long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long usernamelong username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long usernamlong username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long usernamlong username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long usernam long username long username long username long username long username long username long username long username long username long username long username lonlong username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username long username g username long username long username long username long username long username long username long username long username long username username long username long username long username long username long username long username long username long username long username \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Username and password containing only spaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 403\", function () {\r",
+											"\tpm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"       \",\r\n  \"username\": \"       \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Password with NULL characters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 400\", function () {\r",
+											"\tpm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": null,\r\n  \"username\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Login missing the \"password\" field in payload",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 400\", function () {\r",
+											"\tpm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Login missing the \"username\" field in payload",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response_JSON = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Verify status code is 400\", function () {\r",
+											"\tpm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response body has necessary objects\", function () {\r",
+											"\tpm.expect(response_JSON).to.have.property('timestamp');\r",
+											"\tpm.expect(response_JSON).to.have.property('status');\r",
+											"\tpm.expect(response_JSON).to.have.property('error');\r",
+											"\tpm.expect(response_JSON).to.have.property('path');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"password\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/authenticate"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Api-video-games-controller",
+			"item": [
+				{
+					"name": "List all video games",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each item has an id, name, releaseDate, reviewScore, category, and rating\", function () {\r",
+									"    pm.response.json().forEach(function (item) {\r",
+									"        pm.expect(item).to.have.property('id');\r",
+									"        pm.expect(item.id).is.a(\"number\")\r",
+									"        pm.expect(item).to.have.property('name');\r",
+									"        pm.expect(item.name).is.a(\"string\")\r",
+									"        pm.expect(item).to.have.property('releaseDate');\r",
+									"        pm.expect(item.releaseDate).is.a(\"string\")\r",
+									"        pm.expect(item).to.have.property('reviewScore');\r",
+									"        pm.expect(item.reviewScore).is.a(\"number\")\r",
+									"        pm.expect(item).to.have.property('category');\r",
+									"        pm.expect(item.category).is.a(\"string\")\r",
+									"        pm.expect(item).to.have.property('rating');\r",
+									"        pm.expect(item.rating).is.a(\"string\")\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/videogame"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a video game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has the expected properties\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('id');\r",
+									"    pm.expect(responseBody).to.have.property('name');\r",
+									"    pm.expect(responseBody).to.have.property('releaseDate');\r",
+									"    pm.expect(responseBody).to.have.property('reviewScore');\r",
+									"    pm.expect(responseBody).to.have.property('category');\r",
+									"    pm.expect(responseBody).to.have.property('rating');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"category\": \"Category 1\",\r\n  \"name\": \"Pokemon\",\r\n  \"rating\": \"Mature\",\r\n  \"releaseDate\": \"{{$randomDateRecent}}\",\r\n  \"reviewScore\": 85\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/videogame"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single video game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has the expected properties\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('id');\r",
+									"    pm.expect(responseBody).to.have.property('name');\r",
+									"    pm.expect(responseBody).to.have.property('releaseDate');\r",
+									"    pm.expect(responseBody).to.have.property('reviewScore');\r",
+									"    pm.expect(responseBody).to.have.property('category');\r",
+									"    pm.expect(responseBody).to.have.property('rating');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/videogame/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a video game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify the updated video game details\", function () {\r",
+									"    pm.expect(pm.response.json().name).to.eql(\"Game\");\r",
+									"    pm.expect(pm.response.json().releaseDate).to.eql(\"20253/19\");\r",
+									"    pm.expect(pm.response.json().reviewScore).to.eql(8587);\r",
+									"    pm.expect(pm.response.json().category).to.eql(\"Category 123\");\r",
+									"    pm.expect(pm.response.json().rating).to.eql(\"New\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"category\": \"Category 123\",\r\n\t\"name\": \"Game\",\r\n\t\"rating\": \"New\",\r\n\t\"releaseDate\": \"20253/19\",\r\n\t\"reviewScore\": 8587\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/videogame/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a video game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body contains 'Video game deleted'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Video game deleted\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/api/videogame/1"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://www.videogamedb.uk:443"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
